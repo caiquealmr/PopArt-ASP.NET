@@ -13,7 +13,7 @@
 
 O **Projeto PopArt** foi desenvolvido em uma dinâmica de grupo. Este repositório reflete o esforço conjunto dos seguintes integrantes:
 
-- **[Caíque Almeida Amaral](https://github.com/seu-usuario)**  
+- **[Caíque Almeida Amaral](https://github.com/caiquealmr)**  
 - **[Manoel Furtado Gomes Neto](https://github.com/oManoelNeto)**  
 - **[Mateus Sarmento da Hora](https://github.com/sarmentin)**  
 
@@ -45,18 +45,6 @@ O **PopArt** foi desenvolvido utilizando as seguintes tecnologias:
 O projeto utiliza o **SQL Server** como banco de dados, devido à sua alta performance, confiabilidade e facilidade de integração com o ASP.NET Core.  
 
 A estrutura do banco foi criada utilizando o Entity Framework Core para realizar mapeamento objeto-relacional (ORM), facilitando a criação e manipulação de tabelas diretamente a partir dos modelos da aplicação.
-
----
-
-## **Como Rodar a Aplicação**
-
-### **Pré-requisitos**
-Antes de executar o projeto, certifique-se de ter os seguintes itens instalados e configurados:
-1. **.NET SDK 6.0** ou superior.  
-   [Baixar .NET SDK](https://dotnet.microsoft.com/download)
-2. **SQL Server** (versão Express ou superior).  
-   [Baixar SQL Server](https://www.microsoft.com/pt-br/sql-server/sql-server-downloads)
-3. **Visual Studio** com a carga de trabalho **ASP.NET e desenvolvimento web**.
 
 ---
 
