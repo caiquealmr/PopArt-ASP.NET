@@ -1,0 +1,73 @@
+﻿@using PopArt.Enums
+@model UsuarioModel
+
+@{
+    ViewData["Title"] = "Editar usuário";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Editar usuário</h1>
+</div>
+
+<form asp-controller="Usuario" asp-action="Editar" method="post" enctype="multipart/form-data">
+
+    <input type="hidden" asp-for="Id" />
+
+    <!-- Campo Nome -->
+    <div class="form-group">
+        <label for="nome" class="form-label">Nome</label>
+        <input type="text" asp-for="Nome" class="form-control" placeholder="Digite o nome do usuário" />
+        @Html.ValidationMessageFor(x => x.Nome)
+    </div>
+
+    <!-- Campo Email -->
+    <div class="form-group">
+        <label for="email" class="form-label">E-mail</label>
+        <input type="text" asp-for="Email" class="form-control" placeholder="Digite o e-mail do usuário" />
+        @Html.ValidationMessageFor(x => x.Email)
+    </div>
+
+    <!-- Campo Login -->
+    <div class="form-group">
+        <label for="login" class="form-label">Login</label>
+        <input type="text" asp-for="Login" class="form-control" placeholder="Digite o login do usuário" />
+        @Html.ValidationMessageFor(x => x.Login)
+    </div>
+
+    <!-- Campo Perfil -->
+    <div class="form-group">
+        <label for="perfil" class="form-label">Perfil</label>
+        <select asp-for="Perfil" class="form-control">
+            <option value="">Selecione</option>
+            <option value="@PerfilEnum.Admin">Administrador</option>
+            <option value="@PerfilEnum.Padrao">Padrão</option>
+        </select>
+        @Html.ValidationMessageFor(x => x.Perfil)
+    </div>
+
+    <!-- Campo Biografia -->
+    <div class="form-group">
+        <label for="biografia" class="form-label">Biografia</label>
+        <textarea asp-for="Biografia" class="form-control" placeholder="Digite a biografia do usuário"></textarea>
+        @Html.ValidationMessageFor(x => x.Biografia)
+    </div>
+
+    <!-- Foto Atual -->
+    <div class="form-group">
+        <label for="fotoAtual" class="form-label">Foto Atual</label>
+        <div>
+            <img src="@(string.IsNullOrEmpty(Model.FotoDePerfil) ? "/images/default-profile.png" : Model.FotoDePerfil)" alt="Foto do Perfil" width="150" height="150" />
+        </div>
+    </div>
+
+    <!-- Campo para Upload de Nova Foto -->
+    <div class="form-group">
+        <label for="novaFoto" class="form-label">Alterar Foto</label>
+        <input type="file" id="novaFoto" name="novaFoto" class="form-control" />
+    </div>
+
+    <!-- Botões -->
+    <button type="submit" class="btn btn-primary btn-block">Editar</button>
+    <a class="btn btn-secondary btn-block" asp-action="Index" asp-controller="Perfil" role="button">Voltar</a>
+
+</form>

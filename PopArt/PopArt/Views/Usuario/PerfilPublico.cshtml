@@ -1,0 +1,271 @@
+﻿@model UsuarioModel
+
+@{
+    ViewData["Title"] = "Perfil Público do Artista";
+}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <style>
+        :root {
+            --background-color: #f8f5ff;
+            --text-color: #333;
+            --accent-color: #6200ee;
+            --card-background: #ffffff;
+            --border-color: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 30px;
+            padding: 30px;
+            margin-bottom: 30px;
+            background-color: var(--card-background);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            overflow: hidden;
+            background-color: #f0f0f0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+            .profile-image img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+        .profile-content {
+            flex: 1;
+        }
+
+        h1 {
+            font-size: 2em;
+            color: var(--accent-color);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+            .social-links a {
+                color: var(--accent-color);
+                text-decoration: none;
+                font-size: 1em;
+            }
+
+        .profile-bio {
+            margin-top: 15px;
+            font-size: 1em;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .post-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .post-item {
+            background-color: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+            .post-item:hover {
+                transform: translateY(-5px);
+            }
+
+            .post-item img {
+                max-width: 100%;
+                max-height: 200px;
+                object-fit: cover;
+                margin-bottom: 10px;
+                border-radius: 5px;
+                background-color: #f9f9f9;
+            }
+
+            .post-item h2 {
+                font-size: 1.2em;
+                color: var(--accent-color);
+                margin: 10px 0;
+                text-align: center;
+            }
+
+            .post-item p {
+                color: #555;
+                margin: 5px 0;
+                font-size: 0.9em;
+                text-align: center;
+            }
+
+            .post-item .post-date {
+                font-size: 0.8em;
+                color: #999;
+            }
+
+        .filter-container {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+            .filter-container label {
+                font-weight: bold;
+            }
+
+            .filter-container select {
+                padding: 8px;
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+            }
+
+                .filter-container select:focus {
+                    outline: 2px solid var(--accent-color);
+                }
+
+        .btn {
+            padding: 8px 15px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+            .btn:hover {
+                background-color: #7c4dff;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header do Perfil Público -->
+        <div class="profile-header">
+            <div class="profile-image">
+                <img src="@(string.IsNullOrEmpty(Model.FotoDePerfil) ? "/images/default-profile.png" : Model.FotoDePerfil)" alt="Foto do Artista">
+            </div>
+            <div class="profile-content">
+                <h1>@Model.Nome</h1>
+                <div class="social-links">
+                    @if (!string.IsNullOrEmpty(Model.LinkBehance))
+                    {
+                        <a href="@Model.LinkBehance" target="_blank">Behance</a>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.LinkLinkedIn))
+                    {
+                        <a href="@Model.LinkLinkedIn" target="_blank">LinkedIn</a>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.LinkInstagram))
+                    {
+                        <a href="@Model.LinkInstagram" target="_blank">Instagram</a>
+                    }
+                </div>
+                <div class="profile-bio">
+                    @(string.IsNullOrEmpty(Model.Biografia) ? "Biografia não disponível." : Model.Biografia)
+                </div>
+            </div>
+        </div>
+
+        <!-- Filtro -->
+        <div class="filter-container">
+            <label for="categoryFilter">Filtrar por Categoria:</label>
+            <select id="categoryFilter">
+                <option value="all">Todas</option>
+                @foreach (var categoria in Model.Postagens.Select(p => p.Categoria).Distinct())
+                {
+                    <option value="@categoria">@categoria</option>
+                }
+            </select>
+
+            <label for="dateOrder">Ordenar por Data:</label>
+            <select id="dateOrder">
+                <option value="recent">Mais Recentes</option>
+                <option value="oldest">Mais Antigas</option>
+            </select>
+        </div>
+
+        <!-- Postagens -->
+        <div class="post-grid" id="postGrid">
+            @foreach (var postagem in Model.Postagens.OrderByDescending(p => p.DataCriacao))
+            {
+                <div class="post-item" data-category="@postagem.Categoria" data-date="@postagem.DataCriacao.Ticks">
+                    <img src="@(postagem.Imagem != null ? $"data:image/png;base64,{Convert.ToBase64String(postagem.Imagem)}" : "/images/default-post.png")" alt="@postagem.Nome">
+                    <h2>@postagem.Nome</h2>
+                    <p><strong>Categoria:</strong> @postagem.Categoria</p>
+                    <p class="post-date">Criado em: @postagem.DataCriacao.ToString("dd/MM/yyyy")</p>
+                    <a asp-controller="Postagem" asp-action="Detalhes" asp-route-id="@postagem.Id" class="btn">Detalhes</a>
+                </div>
+            }
+        </div>
+    </div>
+
+    <script>
+        const categoryFilter = document.getElementById('categoryFilter');
+        const dateOrder = document.getElementById('dateOrder');
+        const postGrid = document.getElementById('postGrid');
+        const postItems = Array.from(postGrid.children);
+
+        categoryFilter.addEventListener('change', filterAndSortPosts);
+        dateOrder.addEventListener('change', filterAndSortPosts);
+
+        function filterAndSortPosts() {
+            const selectedCategory = categoryFilter.value;
+            const order = dateOrder.value;
+
+            // Filtrar
+            const filteredPosts = postItems.filter(post => {
+                const category = post.getAttribute('data-category');
+                return selectedCategory === 'all' || category === selectedCategory;
+            });
+
+            // Ordenar
+            filteredPosts.sort((a, b) => {
+                const dateA = parseInt(a.getAttribute('data-date'), 10);
+                const dateB = parseInt(b.getAttribute('data-date'), 10);
+                return order === 'recent' ? dateB - dateA : dateA - dateB;
+            });
+
+            // Atualizar Grid
+            postGrid.innerHTML = '';
+            filteredPosts.forEach(post => postGrid.appendChild(post));
+        }
+    </script>
+</body>
+</html>

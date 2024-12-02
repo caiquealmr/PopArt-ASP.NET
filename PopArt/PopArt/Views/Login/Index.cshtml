@@ -1,0 +1,116 @@
+﻿@model LoginModel
+
+@{
+    Layout = "_LayoutDeslogado";
+    ViewData["Title"] = "Login";
+}
+
+<style>
+    /* Centralizando o conteúdo e ajustando o background com gradiente roxo */
+    html, body {
+        height: 100%; /* Faz o body ocupar a altura total da tela */
+        margin: 0;
+    }
+
+    body {
+        background: linear-gradient(135deg, #e0b3ff, #8f4cff);
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* Container principal */
+    .main-container {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        box-sizing: border-box;
+        min-height: calc(100vh - 80px); /* Garante que ocupe a tela toda, considerando o margin-top */
+    }
+
+    /* Container do formulário de login */
+    .login-container {
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px;
+        text-align: center;
+    }
+
+        /* Estilizando o título */
+        .login-container h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* Estilizando os campos de entrada */
+        .login-container .form-control {
+            margin-bottom: 15px;
+        }
+
+    /* Botão de Login */
+    .btn-primary {
+        background-color: #8f4cff;
+        border-color: #8f4cff;
+        width: 100%;
+    }
+
+        .btn-primary:hover {
+            background-color: #7a41db;
+            border-color: #7a41db;
+        }
+
+    /* Alinhando o label à esquerda */
+    .form-label {
+        text-align: left;
+        display: block;
+    }
+
+    /* Links */
+    .login-container a {
+        color: #8f4cff;
+        text-decoration: none;
+    }
+
+        .login-container a:hover {
+            text-decoration: underline;
+        }
+
+    .field-validation-error {
+        color: red;
+        text-align: left;
+        display: block;
+        width: 100%;
+    }
+</style>
+
+@if (TempData["MensagemErro"] != null)
+{
+    <div class="alert alert-danger" role="alert">
+        <button type="button" class="btn btn-danger btn-sm close-alert" data-bs-dismiss="alert" aria-label="Close">X</button>
+        @TempData["MensagemErro"]
+    </div>
+}
+
+<!-- Container principal que segura o conteúdo da página -->
+<div class="main-container">
+    <div class="login-container">
+        <h2>Login</h2>
+        <form asp-controller="Login" asp-action="Entrar" method="post">
+            <div class="mb-3">
+                <label for="login" class="form-label">Login</label>
+                <input type="text" asp-for="Login" class="form-control" id="login" placeholder="Digite seu login">
+                @Html.ValidationMessageFor(x => x.Login)
+            </div>
+            <div class="mb-3">
+                <label for="senha" class="form-label">Senha</label>
+                <input type="password" asp-for="Senha" class="form-control" id="senha" placeholder="Digite sua senha">
+                @Html.ValidationMessageFor(x => x.Senha)
+            </div>
+            <button type="submit" class="btn btn-primary">Entrar</button>
+        </form>
+    </div>
+</div>

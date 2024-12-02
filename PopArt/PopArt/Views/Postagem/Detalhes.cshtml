@@ -1,0 +1,171 @@
+﻿@model PopArt.Models.PostagemModel
+@using PopArt.Helper
+@inject ISessao SessaoUsuario
+
+@{
+    ViewData["Title"] = "Detalhes da Obra";
+}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Popart - @ViewData["Title"]</title>
+    <style>
+        :root {
+            --primary-color: #8B5CF6;
+            --secondary-color: #6B46C1;
+            --background-light: #F9FAFB;
+            --text-dark: #1F2937;
+            --card-background: #FFFFFF;
+            --border-color: #E5E7EB;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .artwork-details {
+            background-color: var(--card-background);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .artwork-image {
+            width: 100%;
+            border-radius: 0.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .artwork-info h1 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .artwork-info h2 {
+            font-size: 1.2rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+        }
+
+        .artwork-info p {
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .sidebar {
+            background-color: var(--card-background);
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .profile-card {
+            margin-bottom: 2rem;
+        }
+
+        .profile-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            border: 3px solid var(--primary-color);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .profile-card h3 {
+            font-size: 1.2rem;
+            color: var(--text-dark);
+        }
+
+        .button {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            color: #FFF;
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 0.5rem;
+            text-align: center;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            margin: 1rem 0;
+        }
+
+            .button:hover {
+                background-color: var(--secondary-color);
+            }
+
+        .button-feed {
+            margin-top: 2rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <main class="main-content">
+        <!-- Left Section: Artwork Details -->
+        <div class="artwork-details">
+            @if (Model.Imagem != null)
+            {
+                <img src="data:image/png;base64,@Convert.ToBase64String(Model.Imagem)" alt="@Model.Nome" class="artwork-image">
+            }
+            <div class="artwork-info">
+                <h1>@Model.Nome</h1>
+                <h2>@(Model.Usuario?.Nome ?? "Artista Desconhecido")</h2>
+                <p><strong>Categoria:</strong> @Model.Categoria</p>
+                <p><strong>Data de Criação:</strong> @Model.DataCriacao.ToString("dd/MM/yyyy")</p>
+                <h3>Descrição:</h3>
+                <p>@(string.IsNullOrEmpty(Model.Descricao) ? "Descrição não disponível." : Model.Descricao)</p>
+            </div>
+        </div>
+
+        <!-- Right Section: Artist Info -->
+        <aside class="sidebar">
+            <div class="profile-card">
+                @if (Model.Usuario?.FotoDePerfil != null)
+                {
+                    <img src="@Model.Usuario.FotoDePerfil" alt="@Model.Usuario.Nome" class="profile-image">
+                }
+                else
+                {
+                    <img src="/images/default-profile.png" alt="Artista Desconhecido" class="profile-image">
+                }
+                <h3>@(Model.Usuario?.Nome ?? "Artista Desconhecido")</h3>
+
+                @if (Model.UsuarioId == SessaoUsuario.BuscarSessaoDoUsuario()?.Id)
+                {
+                    <a href="/Perfil" class="button">Visualizar Meu Perfil</a>
+                }
+                else
+                {
+                    <a asp-controller="Usuario" asp-action="PerfilPublico" asp-route-id="@Model.UsuarioId" class="button">Visualizar Perfil</a>
+                }
+            </div>
+            <div class="button-feed">
+                <h2>Volte ao Feed</h2>
+                <a href="/feed" class="button">Explorar Mais Obras</a>
+            </div>
+        </aside>
+    </main>
+</body>
+</html>

@@ -1,0 +1,193 @@
+﻿@model Tuple<List<PopArt.Models.PostagemModel>, List<PopArt.Models.UsuarioModel>>
+
+@{
+    ViewData["Title"] = "Feed";
+    var postagens = Model.Item1.OrderBy(_ => Guid.NewGuid()).ToList(); // Ordenação aleatória das postagens
+    var perfis = Model.Item2;    // Lista de perfis
+}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <style>
+        :root {
+            --background-color: #f8f5ff;
+            --text-color: #333;
+            --accent-color: #6200ee;
+            --card-background: #ffffff;
+            --button-background: #6200ee;
+            --button-hover: #7c4dff;
+            --button-text: #ffffff;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .banner {
+            background: linear-gradient(135deg, var(--accent-color) 0%, #7c4dff 100%);
+            color: var(--card-background);
+            padding: 60px 20px;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+            .banner h1 {
+                font-size: 3em;
+                font-weight: bold;
+                margin: 0;
+                text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+            }
+
+        .section-title {
+            font-size: 2em;
+            color: var(--accent-color);
+            font-weight: 600;
+            margin: 30px 0 20px;
+        }
+
+        .carousel {
+            display: flex;
+            overflow-x: auto;
+            gap: 20px;
+            padding: 10px 0;
+        }
+
+            .carousel::-webkit-scrollbar {
+                height: 8px;
+            }
+
+            .carousel::-webkit-scrollbar-thumb {
+                background: var(--accent-color);
+                border-radius: 10px;
+            }
+
+            .carousel::-webkit-scrollbar-track {
+                background: #f0f0f0;
+            }
+
+        .card {
+            background-color: var(--card-background);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            min-width: 250px;
+            padding: 15px;
+        }
+
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+            }
+
+            .card img.profile-img {
+                width: 120px;
+                height: 120px;
+                object-fit: cover;
+                margin-bottom: 15px;
+                border-radius: 50%;
+                background-color: #f9f9f9;
+                border: 3px solid var(--accent-color);
+            }
+
+            .card img.art-img {
+                width: 100%;
+                height: 200px;
+                object-fit: cover;
+                margin-bottom: 15px;
+                border-radius: 8px;
+                background-color: #f9f9f9;
+            }
+
+            .card h3 {
+                margin: 10px 0;
+                font-size: 1.2em;
+                color: var(--accent-color);
+            }
+
+            .card p {
+                color: #555;
+                margin: 5px 0;
+                font-size: 0.9em;
+            }
+
+            .card .link {
+                margin-top: 10px;
+                font-size: 0.9em;
+                font-weight: bold;
+                color: var(--accent-color);
+                text-decoration: none;
+            }
+
+                .card .link:hover {
+                    color: #7c4dff;
+                }
+
+        /* Grade de Obras */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Banner Principal -->
+        <div class="banner">
+            <h1>Explore o Universo Artístico no PopArt</h1>
+            <p>Descubra artistas e obras que transformam o mundo.</p>
+        </div>
+
+        <!-- Carrossel de Artistas -->
+        <h2 class="section-title">Artistas em Destaque</h2>
+        <div class="carousel">
+            @foreach (var perfil in perfis)
+            {
+                <div class="card">
+                    <img src="@(string.IsNullOrEmpty(perfil.FotoDePerfil) ? "/images/default-profile.png" : perfil.FotoDePerfil)" alt="@perfil.Nome" class="profile-img">
+                    <h3>@perfil.Nome</h3>
+                    <p>@(string.IsNullOrEmpty(perfil.Biografia) ? "Biografia não disponível." : perfil.Biografia.Length > 100 ? perfil.Biografia.Substring(0, 100) + "..." : perfil.Biografia)</p>
+                    <a href="@Url.Action("PerfilPublico", "Usuario", new { id = perfil.Id })" class="link">Visualizar Perfil</a>
+                </div>
+            }
+        </div>
+
+        <!-- Grade de Obras Recentes -->
+        <h2 class="section-title">Obras Recentes</h2>
+        <div class="grid">
+            @foreach (var postagem in postagens)
+            {
+                <div class="card">
+                    <img src="@(postagem.Imagem != null ? $"data:image/png;base64,{Convert.ToBase64String(postagem.Imagem)}" : "/images/default-post.png")" alt="@postagem.Nome" class="art-img">
+                    <h3>@postagem.Nome</h3>
+                    <p>Artista: @(postagem.Usuario?.Nome ?? "Desconhecido")</p>
+                    <p><strong>Categoria:</strong> @postagem.Categoria</p>
+                    <a href="@Url.Action("Detalhes", "Postagem", new { id = postagem.Id })" class="link">Ver Mais</a>
+                </div>
+            }
+        </div>
+    </div>
+</body>
+</html>

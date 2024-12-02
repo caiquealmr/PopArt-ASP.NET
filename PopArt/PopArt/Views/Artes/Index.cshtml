@@ -1,0 +1,217 @@
+﻿@model List<PopArt.Models.PostagemModel>
+
+@{
+    ViewData["Title"] = "Artes";
+    var categorias = new[] { "Pinturas", "Esculturas", "Fotografias", "Arte Digital" };
+}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <style>
+        :root {
+            --background-color: #f8f5ff;
+            --text-color: #333;
+            --accent-color: #6200ee;
+            --card-background: #ffffff;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Banner Principal */
+        .banner {
+            background: linear-gradient(135deg, var(--accent-color) 0%, #7c4dff 100%);
+            color: var(--card-background);
+            padding: 60px 20px;
+            text-align: center;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+            .banner h1 {
+                font-size: 3em;
+                margin: 0;
+                font-weight: bold;
+                text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+            }
+
+        /* Barra de Pesquisa */
+        .search-bar {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+            .search-bar input {
+                padding: 12px;
+                font-size: 1.1em;
+                width: 50%;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+            }
+
+        .no-results {
+            color: red;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 2em;
+            color: var(--accent-color);
+            font-weight: 600;
+            margin: 30px 0 20px;
+        }
+
+        /* Carrossel */
+        .carousel {
+            display: flex;
+            overflow-x: auto;
+            gap: 20px;
+            padding: 10px 0;
+            scroll-behavior: smooth;
+            max-height: 70vh;
+        }
+
+            .carousel::-webkit-scrollbar {
+                height: 10px;
+            }
+
+            .carousel::-webkit-scrollbar-track {
+                background: #e0e0e0;
+                border-radius: 5px;
+            }
+
+            .carousel::-webkit-scrollbar-thumb {
+                background-color: var(--accent-color);
+                border-radius: 5px;
+                border: 2px solid #f8f5ff;
+            }
+
+                .carousel::-webkit-scrollbar-thumb:hover {
+                    background-color: #7c4dff;
+                }
+
+        .card {
+            background-color: var(--card-background);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            padding: 15px;
+            flex: 0 0 auto;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+            }
+
+            .card img.art-img {
+                width: 100%;
+                height: 200px;
+                object-fit: cover;
+                margin: 0 auto 15px;
+                display: block;
+                border-radius: 8px;
+            }
+
+            .card h3 {
+                margin: 10px 0;
+                font-size: 1.2em;
+                color: var(--accent-color);
+            }
+
+            .card p {
+                font-size: 0.9em;
+                color: #555;
+            }
+
+            .card .link {
+                margin-top: 10px;
+                font-size: 0.9em;
+                font-weight: bold;
+                color: var(--accent-color);
+                text-decoration: none;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Banner -->
+        <div class="banner">
+            <h1>Explore as Artes do PopArt</h1>
+            <p>Descubra as mais incríveis obras de arte e se inspire com os artistas.</p>
+        </div>
+
+        <!-- Barra de Pesquisa -->
+        <div class="search-bar">
+            <input type="text" id="artSearch" placeholder="Buscar arte por nome..." oninput="searchArt()">
+        </div>
+
+        <!-- Mensagem de Nenhum Resultado -->
+        <div class="no-results" id="noResultsMessage" style="display: none;">
+            Nenhuma arte encontrada.
+        </div>
+
+        <!-- Artes por Categoria -->
+        @foreach (var categoria in categorias)
+        {
+            <div>
+                <h2 class="section-title">@categoria</h2>
+                <div class="carousel" id="@categoria">
+                    @foreach (var postagem in Model.Where(p => p.Categoria == categoria).OrderBy(p => Guid.NewGuid()))
+                    {
+                        <div class="card">
+                            <img src="@(postagem.Imagem != null ? $"data:image/png;base64,{Convert.ToBase64String(postagem.Imagem)}" : "/images/default-post.png")" alt="@postagem.Nome" class="art-img">
+                            <h3>@postagem.Nome</h3>
+                            <p><strong>Artista:</strong> @(postagem.Usuario?.Nome ?? "Desconhecido")</p>
+                            <p><strong>Data:</strong> @postagem.DataCriacao.ToString("dd/MM/yyyy")</p>
+                            <a href="@Url.Action("Detalhes", "Postagem", new { id = postagem.Id })" class="link">Ver Mais</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+
+    <script>
+        function searchArt() {
+            const searchTerm = document.getElementById('artSearch').value.toLowerCase();
+            const categories = ['Pinturas', 'Esculturas', 'Fotografias', 'Arte Digital'];
+            let foundAny = false;
+
+            categories.forEach(category => {
+                const carousel = document.getElementById(category);
+                const cards = carousel.getElementsByClassName('card');
+                Array.from(cards).forEach(card => {
+                    const title = card.querySelector('h3').textContent.toLowerCase();
+                    card.style.display = title.includes(searchTerm) ? 'block' : 'none';
+                    if (title.includes(searchTerm)) foundAny = true;
+                });
+            });
+
+            document.getElementById('noResultsMessage').style.display = foundAny ? 'none' : 'block';
+        }
+    </script>
+</body>
+</html>

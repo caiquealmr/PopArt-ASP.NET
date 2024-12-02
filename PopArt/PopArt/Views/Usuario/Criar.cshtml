@@ -1,0 +1,138 @@
+﻿@using PopArt.Enums
+@model UsuarioModel
+
+@{
+    Layout = "_LayoutDeslogado"; // Aplica o layout para usuários deslogados, caso necessário
+    ViewData["Title"] = "Criar usuário";
+}
+
+<style>
+    /* Centralizando o conteúdo e ajustando o background com gradiente roxo */
+    body {
+        background: linear-gradient(135deg, #e0b3ff, #8f4cff);
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* Centraliza verticalmente o conteúdo */
+    }
+
+    /* Container principal */
+    .main-container {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px; /* Espaçamento lateral */
+        box-sizing: border-box;
+        min-height: 100vh; /* Garante que o container ocupe toda a altura da janela */
+        margin-top: 80px; /* Dobrou o espaçamento na parte superior */
+    }
+
+    /* Container do formulário de cadastro */
+    .login-container {
+        background-color: #ffffff;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        max-width: 400px; /* Limita o tamanho máximo do formulário */
+        text-align: center;
+    }
+
+        /* Estilizando o título */
+        .login-container h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* Estilizando os campos de entrada */
+        .login-container .form-control {
+            margin-bottom: 15px;
+        }
+
+    /* Botão de Cadastro */
+    .btn-primary {
+        background-color: #8f4cff;
+        border-color: #8f4cff;
+        width: 100%;
+    }
+
+        .btn-primary:hover {
+            background-color: #7a41db;
+            border-color: #7a41db;
+        }
+
+    /* Alinhando o label à esquerda */
+    .form-label {
+        text-align: left;
+        display: block;
+    }
+
+    /* Links */
+    .login-container a {
+        color: #8f4cff;
+        text-decoration: none;
+    }
+
+        .login-container a:hover {
+            text-decoration: underline;
+        }
+
+    /* Estilizando mensagens de erro */
+    .field-validation-error {
+        color: red;
+        text-align: left;
+        display: block;
+        width: 100%;
+    }
+</style>
+
+<!-- Container principal que segura o conteúdo da página -->
+<div class="main-container">
+    <div class="login-container">
+        <div class="text-center">
+            <h2>Cadastre-se</h2>
+        </div>
+
+        <form asp-controller="Usuario" asp-action="Criar" method="post">
+            <div class="form-group">
+                <label for="nome" class="form-label">Nome*</label>
+                <input type="text" asp-for="Nome" class="form-control" placeholder="Digite o nome do usuário">
+                @Html.ValidationMessageFor(x => x.Nome)
+            </div>
+
+            <div class="form-group">
+                <label for="email" class="form-label">E-mail*</label>
+                <input type="email" asp-for="Email" class="form-control" placeholder="Digite o e-mail do usuário">
+                @Html.ValidationMessageFor(x => x.Email)
+            </div>
+
+            <div class="form-group">
+                <label for="login" class="form-label">Login*</label>
+                <input type="text" asp-for="Login" class="form-control" placeholder="Digite o login do usuário">
+                @Html.ValidationMessageFor(x => x.Login)
+            </div>
+
+            <div class="form-group">
+                <label for="perfil" class="form-label">Perfil*</label>
+                <select asp-for="Perfil" class="form-control">
+                    <option value="">Selecione</option>
+                    <option value="@((int)PerfilEnum.Admin)">Artista</option>
+                    <option value="@((int)PerfilEnum.Padrao)">Amante de Arte</option>
+                </select>
+                @Html.ValidationMessageFor(x => x.Perfil)
+            </div>
+
+            <div class="form-group">
+                <label for="senha" class="form-label">Senha*</label>
+                <input type="password" asp-for="Senha" class="form-control" placeholder="Digite a senha do usuário">
+                @Html.ValidationMessageFor(x => x.Senha)
+            </div>
+
+            <div class="d-flex" style="gap: 10px;">
+                <button type="submit" class="btn btn-primary">Cadastre-se</button>
+                <button type="button" class="btn btn-primary ml-2" onclick="window.location.href='@Url.Action("Index", "Login")'">Voltar</button>
+            </div>
+        </form>
+    </div>
+</div>

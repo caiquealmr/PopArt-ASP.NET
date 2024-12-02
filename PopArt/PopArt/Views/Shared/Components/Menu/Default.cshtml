@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - PopArt</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/PopArt.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <!-- Cabeçalho Compartilhado -->
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid d-flex align-items-center justify-content-between">
+                <!-- Logo e Nome do Site -->
+                <div class="d-flex align-items-center">
+                    <img src="/images/logo.jpeg" alt="Logo do Site" class="logo">
+
+                    <span class="site-name">PopArt</span>
+                </div>
+
+                <!-- Rotas no Centro -->
+                <div class="collapse navbar-collapse justify-content-center" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Feed" asp-action="Index">Feed</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Artistas" asp-action="Index">Artistas</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Artes" asp-action="Index">Artes</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Perfil" asp-action="Index">Perfil</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Botão de Sair -->
+                <button class="btn btn-logout" onclick="confirmarSaida()">Sair</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Corpo Principal -->
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <!-- Rodapé -->
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2024 - PopArt
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <!-- Script de Confirmação de Saída -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function confirmarSaida() {
+            Swal.fire({
+                title: 'Tem certeza que deseja sair?',
+                text: "Você precisará fazer login novamente para acessar sua conta!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sim, quero sair',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = '@Url.Action("Sair", "Login")';
+                }
+            });
+        }
+    </script>
+
+    <!-- Estilos -->
+    <style>
+        .navbar {
+            background-color: #f8f5ff; /* Cor de fundo suave */
+            padding: 10px 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para destaque */
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            margin-right: 10px;
+            border-radius: 50%; /* Torna a imagem arredondada */
+            min-width: 40px;
+            max-width: 60px;
+            min-height: 40px;
+            max-height: 60px;
+        }
+
+        .site-name {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #6200ee;
+        }
+
+        .navbar-toggler-icon {
+            background-color: #6200ee;
+            border-radius: 5px;
+            width: 30px;
+            height: 3px;
+            margin: 4px 0;
+        }
+
+        .navbar-nav .nav-link {
+            font-size: 1rem;
+            color: #333 !important;
+            padding: 10px 15px;
+            transition: color 0.3s ease, background-color 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover {
+            background-color: #e0d6ff;
+            color: #6200ee !important;
+            border-radius: 5px;
+        }
+
+        .navbar-nav .nav-link.active {
+            font-weight: bold;
+            background-color: #6200ee;
+            color: #fff !important;
+            border-radius: 5px;
+        }
+
+        .btn-logout {
+            background-color: #d33;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .btn-logout:hover {
+            background-color: #c62828;
+            transform: scale(1.05);
+        }
+
+    </style>
+</body>
+</html>

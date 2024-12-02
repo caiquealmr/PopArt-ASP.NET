@@ -1,0 +1,57 @@
+﻿@model PopArt.Models.PostagemModel
+
+@{
+    ViewData["Title"] = "Criar Postagem";
+}
+
+<h1>Criar Postagem</h1>
+
+@if (TempData["MensagemErro"] != null)
+{
+    <div style="color:red;">
+        @TempData["MensagemErro"]
+    </div>
+}
+
+@if (TempData["MensagemSucesso"] != null)
+{
+    <div style="color:green;">
+        @TempData["MensagemSucesso"]
+    </div>
+}
+
+<form asp-action="Criar" asp-controller="Postagem" method="post" enctype="multipart/form-data">
+    <div>
+        <label for="Nome">Nome da Arte</label>
+        <input type="text" asp-for="Nome" class="form-control" placeholder="Digite o nome da arte" required />
+        @Html.ValidationMessageFor(model => model.Nome)
+    </div>
+
+    <div>
+        <label for="Categoria">Categoria</label>
+        <select asp-for="Categoria" class="form-control" required>
+            <option value="">Selecione uma categoria</option>
+            <option value="Pinturas">Pinturas</option>
+            <option value="Esculturas">Esculturas</option>
+            <option value="Fotografias">Fotografias</option>
+            <option value="Arte Digital">Arte Digital</option>
+        </select>
+        @Html.ValidationMessageFor(model => model.Categoria)
+    </div>
+
+    <div>
+        <label for="Descricao">Descrição</label>
+        <textarea asp-for="Descricao" class="form-control" placeholder="Digite uma descrição" rows="5" required></textarea>
+        @Html.ValidationMessageFor(model => model.Descricao)
+    </div>
+
+    <div>
+        <label for="Imagem">Imagem</label>
+        <input type="file" name="imagemUpload" class="form-control" />
+        @Html.ValidationMessage("Imagem")
+    </div>
+
+    <br />
+    <button type="submit" class="btn btn-primary">Criar</button>
+    <a class="btn btn-secondary btn-block" asp-action="Index" asp-controller="Perfil" role="button">Voltar</a>
+</form>

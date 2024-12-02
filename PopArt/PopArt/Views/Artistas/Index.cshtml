@@ -1,0 +1,188 @@
+﻿@model List<PopArt.Models.UsuarioModel>
+
+@{
+    ViewData["Title"] = "Artistas";
+    var randomArtists = Model.OrderBy(a => Guid.NewGuid()).ToList(); // Embaralhar artistas no servidor
+}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <style>
+        :root {
+            --background-color: #f8f5ff;
+            --text-color: #333;
+            --accent-color: #6200ee;
+            --card-background: #ffffff;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .banner {
+            background: linear-gradient(135deg, var(--accent-color) 0%, #7c4dff 100%);
+            color: var(--card-background);
+            padding: 60px 20px;
+            text-align: center;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+            .banner h1 {
+                font-size: 3em;
+                font-weight: bold;
+                margin: 0;
+                text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.3);
+            }
+
+        .search-bar {
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+        }
+
+            .search-bar input {
+                padding: 12px;
+                font-size: 1.1em;
+                width: 50%;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+            }
+
+        .no-results {
+            color: red;
+            margin-bottom: 20px;
+            font-size: 1.2em;
+            text-align: center;
+            display: none;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background-color: var(--card-background);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            padding: 15px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+            }
+
+            .card img.profile-img {
+                width: 120px;
+                height: 120px;
+                object-fit: cover;
+                border-radius: 50%;
+                border: 3px solid var(--accent-color);
+                margin: 0 auto 15px;
+                display: block;
+            }
+
+            .card h3 {
+                margin: 10px 0;
+                font-size: 1.2em;
+                color: var(--accent-color);
+            }
+
+            .card p {
+                font-size: 0.9em;
+                color: #555;
+            }
+
+            .card .link {
+                font-size: 0.9em;
+                font-weight: bold;
+                color: var(--accent-color);
+                text-decoration: none;
+            }
+
+                .card .link:hover {
+                    color: #7c4dff;
+                }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Banner -->
+        <div class="banner">
+            <h1>Explore os Artistas do PopArt</h1>
+            <p>Conecte-se com artistas incríveis e conheça suas obras.</p>
+        </div>
+
+        <!-- Barra de Pesquisa -->
+        <div class="search-bar">
+            <input type="text" id="artistSearch" placeholder="Buscar artista por nome..." oninput="searchArtist()">
+        </div>
+
+        <!-- Mensagem de Nenhum Resultado -->
+        <div class="no-results" id="noResultsMessage">
+            Nenhum artista encontrado.
+        </div>
+
+        <!-- Grid de Artistas -->
+        <div class="grid" id="artistGrid">
+            @foreach (var perfil in randomArtists)
+            {
+                <div class="card">
+                    <img src="@(string.IsNullOrEmpty(perfil.FotoDePerfil) ? "/images/default-profile.png" : perfil.FotoDePerfil)" alt="@perfil.Nome" class="profile-img">
+                    <h3>@perfil.Nome</h3>
+                    <p>
+                        @(string.IsNullOrEmpty(perfil.Biografia)
+                            ? "Biografia não disponível."
+                            : perfil.Biografia.Length > 100
+                            ? perfil.Biografia.Substring(0, 100) + "..."
+                            : perfil.Biografia)
+                    </p>
+                    <a href="@Url.Action("PerfilPublico", "Usuario", new { id = perfil.Id })" class="link">Visualizar Perfil</a>
+                </div>
+            }
+        </div>
+    </div>
+
+    <script>
+        function searchArtist() {
+            const searchTerm = document.getElementById('artistSearch').value.toLowerCase();
+            const artists = document.querySelectorAll('.grid .card');
+            let foundAny = false;
+
+            artists.forEach(artist => {
+                const name = artist.querySelector('h3').textContent.toLowerCase();
+                if (name.includes(searchTerm)) {
+                    artist.style.display = 'block';
+                    foundAny = true;
+                } else {
+                    artist.style.display = 'none';
+                }
+            });
+
+            const noResultsMessage = document.getElementById('noResultsMessage');
+            noResultsMessage.style.display = foundAny ? 'none' : 'block';
+        }
+    </script>
+</body>
+</html>

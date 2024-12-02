@@ -1,0 +1,242 @@
+﻿@model Tuple<List<PopArt.Models.PostagemModel>, List<PopArt.Models.UsuarioModel>>
+@using PopArt.Helper
+@inject ISessao SessaoUsuario
+
+@{
+    ViewData["Title"] = "Home";
+    var postagens = Model.Item1; // Lista de postagens
+    var perfis = Model.Item2;    // Lista de perfis
+}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <style>
+        :root {
+            --background-color: #f8f5ff;
+            --text-color: #333;
+            --accent-color: #6200ee;
+            --card-background: #ffffff;
+            --button-background: #6200ee;
+            --button-hover: #7c4dff;
+            --button-text: #ffffff;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .banner {
+            position: relative;
+            height: 400px;
+            background: url('/images/banner-art.jpg') no-repeat center center/cover;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .banner-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            z-index: 1;
+        }
+
+        .banner-content {
+            position: relative;
+            z-index: 2;
+            color: #fff;
+            text-align: center;
+        }
+
+            .banner-content h1 {
+                font-size: 3em;
+                margin: 0;
+                font-weight: bold;
+            }
+
+            .banner-content p {
+                font-size: 1.2em;
+                margin: 10px 0;
+            }
+
+        .banner-buttons .btn {
+            display: inline-block;
+            background-color: var(--accent-color);
+            color: var(--button-text);
+            padding: 12px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: bold;
+            margin: 10px 5px;
+            transition: background-color 0.3s ease;
+        }
+
+            .banner-buttons .btn:hover {
+                background-color: var(--button-hover);
+            }
+
+        .section-title {
+            font-size: 2em;
+            color: var(--accent-color);
+            font-weight: 600;
+            margin: 30px 0 20px;
+        }
+
+        .carousel {
+            display: flex;
+            overflow-x: auto;
+            gap: 20px;
+            padding: 10px 0;
+        }
+
+            .carousel::-webkit-scrollbar {
+                height: 8px;
+            }
+
+            .carousel::-webkit-scrollbar-thumb {
+                background: var(--accent-color);
+                border-radius: 10px;
+            }
+
+            .carousel::-webkit-scrollbar-track {
+                background: #f0f0f0;
+            }
+
+        .card {
+            background-color: var(--card-background);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            min-width: 250px;
+            padding: 15px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+            .card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+            }
+
+            .card img.profile-img {
+                width: 120px;
+                height: 120px;
+                object-fit: cover;
+                margin-bottom: 15px;
+                border-radius: 50%; /* Foto de perfil redonda */
+                background-color: #f9f9f9;
+                border: 3px solid var(--accent-color);
+            }
+
+            .card img.art-img {
+                width: 100%;
+                height: 200px;
+                object-fit: cover;
+                margin-bottom: 15px;
+                border-radius: 8px;
+                background-color: #f9f9f9;
+            }
+
+            .card h3 {
+                margin: 10px 0;
+                font-size: 1.2em;
+                color: var(--accent-color);
+            }
+
+            .card p {
+                color: #555;
+                margin: 5px 0;
+                font-size: 0.9em;
+            }
+
+            .card .link {
+                margin-top: 10px;
+                font-size: 0.9em;
+                font-weight: bold;
+                color: var(--accent-color);
+                text-decoration: none;
+            }
+
+                .card .link:hover {
+                    color: #7c4dff;
+                }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Banner Principal -->
+        <div class="banner">
+            <div class="banner-overlay"></div>
+            <div class="banner-content">
+                <h1>Descubra o Melhor da Arte no PopArt</h1>
+                <p>Explore artistas talentosos e obras incríveis separadas por categorias.</p>
+                <div class="banner-buttons">
+                    <a href="/feed" class="btn">Explorar Agora</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Artistas em Destaque -->
+        <h2 class="section-title">Artistas em Destaque</h2>
+        <div class="carousel">
+            @foreach (var perfil in perfis)
+            {
+                <div class="card">
+                    <img src="@(string.IsNullOrEmpty(perfil.FotoDePerfil) ? "/images/default-profile.png" : perfil.FotoDePerfil)" alt="@perfil.Nome" class="profile-img">
+                    <h3>@perfil.Nome</h3>
+                    <p>@(perfil.Biografia?.Length > 100 ? perfil.Biografia.Substring(0, 100) + "..." : perfil.Biografia)</p>
+                    @if (perfil.Id == SessaoUsuario.BuscarSessaoDoUsuario()?.Id)
+                    {
+                        <!-- Caso o usuário clique no seu próprio perfil -->
+                        <a href="/Perfil" class="link">Visualizar Meu Perfil</a>
+                    }
+                    else
+                    {
+                        <a href="@Url.Action("PerfilPublico", "Usuario", new { id = perfil.Id })" class="link">Visualizar Perfil</a>
+                    }
+                </div>
+            }
+        </div>
+
+        <!-- Obras em Destaque -->
+        <h2 class="section-title">Obras em Destaque</h2>
+        <div class="carousel">
+            @foreach (var postagem in postagens)
+            {
+                <div class="card">
+                    <img src="@(postagem.Imagem != null ? $"data:image/png;base64,{Convert.ToBase64String(postagem.Imagem)}" : "/images/default-post.png")" alt="@postagem.Nome" class="art-img">
+                    <h3>@postagem.Nome</h3>
+                    <p>Artista: @(postagem.Usuario?.Nome ?? "Desconhecido")</p>
+                    <a href="@Url.Action("Detalhes", "Postagem", new { id = postagem.Id })" class="link">Ver Mais</a>
+                </div>
+            }
+        </div>
+    </div>
+</body>
+</html>

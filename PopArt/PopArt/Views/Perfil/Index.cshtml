@@ -1,0 +1,356 @@
+﻿@model UsuarioModel
+
+@{
+    ViewData["Title"] = "Perfil do Artista";
+}
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <style>
+        :root {
+            --background-color: #f8f5ff;
+            --text-color: #333;
+            --accent-color: #6200ee;
+            --card-background: #ffffff;
+            --border-color: #e0e0e0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: flex-start;
+            gap: 30px;
+            padding: 30px;
+            margin-bottom: 30px;
+            background-color: var(--card-background);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .profile-image {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            overflow: hidden;
+            background-color: #f0f0f0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+            .profile-image img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+        .profile-content {
+            flex: 1;
+        }
+
+        h1 {
+            font-size: 2em;
+            color: var(--accent-color);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+            .social-links a {
+                color: var(--accent-color);
+                text-decoration: none;
+                font-size: 1em;
+            }
+
+        .profile-bio {
+            margin-top: 15px;
+            font-size: 1em;
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .profile-actions {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+            .btn:hover {
+                background-color: #7c4dff;
+            }
+
+        .btn-danger {
+            background-color: #e53935;
+            color: white;
+        }
+
+            .btn-danger:hover {
+                background-color: #d32f2f;
+            }
+
+        .post-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .post-item {
+            background-color: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+            .post-item:hover {
+                transform: translateY(-5px);
+            }
+
+            .post-item img {
+                max-width: 100%;
+                max-height: 200px;
+                object-fit: cover;
+                margin-bottom: 10px;
+                border-radius: 5px;
+                background-color: #f9f9f9;
+            }
+
+            .post-item h2 {
+                font-size: 1.2em;
+                color: var(--accent-color);
+                margin: 10px 0;
+                text-align: center;
+            }
+
+            .post-item p {
+                color: #555;
+                margin: 5px 0;
+                font-size: 0.9em;
+                text-align: center;
+            }
+
+            .post-item .post-date {
+                font-size: 0.8em;
+                color: #999;
+            }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: var(--card-background);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .modal h2 {
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+
+        .modal p {
+            color: #555;
+        }
+
+        .filter-container {
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+            .filter-container label {
+                font-weight: bold;
+            }
+
+            .filter-container select {
+                padding: 8px;
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+            }
+
+                .filter-container select:focus {
+                    outline: 2px solid var(--accent-color);
+                }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="profile-header">
+            <div class="profile-image">
+                <img src="@(string.IsNullOrEmpty(Model.FotoDePerfil) ? "/images/default-profile.png" : Model.FotoDePerfil)" alt="Foto do Artista">
+            </div>
+            <div class="profile-content">
+                <h1>@Model.Nome</h1>
+                <div class="social-links">
+                    @if (!string.IsNullOrEmpty(Model.LinkBehance))
+                    {
+                        <a href="@Model.LinkBehance" target="_blank">Behance</a>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.LinkLinkedIn))
+                    {
+                        <a href="@Model.LinkLinkedIn" target="_blank">LinkedIn</a>
+                    }
+                    @if (!string.IsNullOrEmpty(Model.LinkInstagram))
+                    {
+                        <a href="@Model.LinkInstagram" target="_blank">Instagram</a>
+                    }
+                </div>
+                <div class="profile-bio">
+                    @(string.IsNullOrEmpty(Model.Biografia) ? "Biografia não disponível." : Model.Biografia)
+                </div>
+                <div class="profile-actions">
+                    <a asp-action="Editar" asp-controller="Usuario" asp-route-id="@Model.Id" class="btn">Editar Perfil</a>
+                    <a asp-controller="Postagem" asp-action="Index" class="btn">Criar Postagem</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="filter-container">
+            <label for="categoryFilter">Filtrar por Categoria:</label>
+            <select id="categoryFilter">
+                <option value="all">Todas</option>
+                @foreach (var categoria in Model.Postagens.Select(p => p.Categoria).Distinct())
+                {
+                    <option value="@categoria">@categoria</option>
+                }
+            </select>
+
+            <label for="dateOrder">Ordenar por:</label>
+            <select id="dateOrder">
+                <option value="recent">Mais Recentes</option>
+                <option value="oldest">Mais Antigas</option>
+            </select>
+        </div>
+
+        <div class="post-grid" id="postGrid">
+            @foreach (var postagem in Model.Postagens)
+            {
+                <div class="post-item" data-category="@postagem.Categoria" data-date="@postagem.DataCriacao.Ticks">
+                    <img src="@(postagem.Imagem != null ? $"data:image/png;base64,{Convert.ToBase64String(postagem.Imagem)}" : "/images/default-post.png")" alt="@postagem.Nome">
+                    <h2>@postagem.Nome</h2>
+                    <p><strong>Categoria:</strong> @postagem.Categoria</p>
+                    <p class="post-date"><em>Criado em: @postagem.DataCriacao.ToString("dd/MM/yyyy")</em></p>
+                    <div class="modal-actions">
+                        <a asp-controller="Postagem" asp-action="Detalhes" asp-route-id="@postagem.Id" class="btn">Detalhes</a>
+                        <button class="btn btn-danger" data-id="@postagem.Id" onclick="confirmDelete(this.getAttribute('data-id'))">Deletar</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div id="deleteModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <h2>Confirmar Exclusão</h2>
+            <p>Você tem certeza de que deseja excluir esta postagem? Esta ação não pode ser desfeita.</p>
+            <div class="modal-actions">
+                <button id="cancelDelete" class="btn">Cancelar</button>
+                <button id="confirmDelete" class="btn btn-danger">Deletar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const postGrid = document.getElementById('postGrid');
+        const postItems = Array.from(postGrid.children);
+
+        let currentPostId = null;
+
+        function confirmDelete(postId) {
+            currentPostId = postId;
+            document.getElementById('deleteModal').style.display = 'flex';
+        }
+
+        document.getElementById('cancelDelete').addEventListener('click', () => {
+            document.getElementById('deleteModal').style.display = 'none';
+        });
+
+        document.getElementById('confirmDelete').addEventListener('click', () => {
+            if (currentPostId) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = `/Postagem/Apagar?id=${currentPostId}`;
+                document.body.appendChild(form);
+                form.submit();
+            }
+        });
+
+        document.getElementById('categoryFilter').addEventListener('change', filterAndSortPosts);
+        document.getElementById('dateOrder').addEventListener('change', filterAndSortPosts);
+
+        function filterAndSortPosts() {
+            const selectedCategory = document.getElementById('categoryFilter').value;
+            const order = document.getElementById('dateOrder').value;
+
+            const filteredPosts = postItems.filter(post => {
+                const category = post.getAttribute('data-category');
+                return selectedCategory === 'all' || category === selectedCategory;
+            });
+
+            filteredPosts.sort((a, b) => {
+                const dateA = parseInt(a.getAttribute('data-date'), 10);
+                const dateB = parseInt(b.getAttribute('data-date'), 10);
+                return order === 'recent' ? dateB - dateA : dateA - dateB;
+            });
+
+            postGrid.innerHTML = '';
+            filteredPosts.forEach(post => postGrid.appendChild(post));
+        }
+    </script>
+</body>
+</html>
