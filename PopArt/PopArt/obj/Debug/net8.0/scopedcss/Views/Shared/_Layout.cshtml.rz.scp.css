@@ -1,0 +1,63 @@
+/* Estilos Gerais */
+
+a.navbar-brand[b-9ly5wy5x0i] {
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
+}
+
+a[b-9ly5wy5x0i] {
+    color: #0077cc;
+}
+
+.btn-primary[b-9ly5wy5x0i] {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+.nav-pills .nav-link.active[b-9ly5wy5x0i], .nav-pills .show > .nav-link[b-9ly5wy5x0i] {
+    color: #fff;
+    background-color: #1b6ec2;
+    border-color: #1861ac;
+}
+
+.border-top[b-9ly5wy5x0i] {
+    border-top: 1px solid #e5e5e5;
+}
+
+.border-bottom[b-9ly5wy5x0i] {
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow[b-9ly5wy5x0i] {
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy[b-9ly5wy5x0i] {
+    font-size: 1rem;
+    line-height: inherit;
+}
+
+/* Ajuste do Footer para aparecer logo após o conteúdo */
+
+html[b-9ly5wy5x0i], body[b-9ly5wy5x0i] {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.container[b-9ly5wy5x0i] {
+    flex: 1;
+}
+
+.footer[b-9ly5wy5x0i] {
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    background-color: white;
+    text-align: center;
+    line-height: 60px;
+    border-top: 1px solid #e5e5e5;
+}

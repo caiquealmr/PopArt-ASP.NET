@@ -1,0 +1,64 @@
+/* Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
+for details on configuring this project to bundle and minify static web assets. */
+
+/* Estilo para a navbar fixa */
+.navbar[b-kzceahk6u4] {
+    position: fixed; /* Fixa a navbar no topo da tela */
+    top: 0;
+    left: 0;
+    width: 100%; /* Garante que ela ocupe toda a largura da tela */
+    z-index: 1000; /* Garante que fique acima de outros elementos */
+    background-color: #f8f9fa; /* Estilo de fundo para a navbar */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Adiciona uma sombra leve */
+}
+
+
+a.navbar-brand[b-kzceahk6u4] {
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
+}
+
+
+a[b-kzceahk6u4] {
+  color: #0077cc;
+}
+
+.btn-primary[b-kzceahk6u4] {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+.nav-pills .nav-link.active[b-kzceahk6u4], .nav-pills .show > .nav-link[b-kzceahk6u4] {
+  color: #fff;
+  background-color: #1b6ec2;
+  border-color: #1861ac;
+}
+
+.border-top[b-kzceahk6u4] {
+  border-top: 1px solid #e5e5e5;
+}
+.border-bottom[b-kzceahk6u4] {
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.box-shadow[b-kzceahk6u4] {
+  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+}
+
+button.accept-policy[b-kzceahk6u4] {
+  font-size: 1rem;
+  line-height: inherit;
+}
+
+/* Estilo do footer */
+.footer[b-kzceahk6u4] {
+    background-color: #f8f9fa;
+    width: 100%;
+    line-height: 60px;
+    text-align: center;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Adiciona uma leve sombra */
+    white-space: nowrap;
+}
+
